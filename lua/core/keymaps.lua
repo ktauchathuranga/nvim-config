@@ -1,4 +1,4 @@
--- C:\Users\Ashen Chathuranga\AppData\Local\nvim\lua\core\keymaps.lua
+-- ~/.config/nvim/lua/core/keymaps.lua
 -- Core Keymappings
 
 local map = vim.keymap.set
@@ -60,8 +60,9 @@ map('n', '<leader>rt', ':!cargo test<CR>', { desc = 'Run Rust tests' })
 map('n', '<leader>rb', ':!cargo build<CR>', { desc = 'Build Rust project' })
 
 -- Arduino-specific
+local arduino_port = vim.fn.has('win32') == 1 and 'COM3' or '/dev/ttyACM0'
 map('n', '<leader>ac', ':!arduino-cli compile --fqbn arduino:avr:uno %<CR>', { desc = 'Compile Arduino sketch' })
-map('n', '<leader>au', ':!arduino-cli upload -p COM3 --fqbn arduino:avr:uno %<CR>', { desc = 'Upload Arduino sketch' })
+map('n', '<leader>au', ':!arduino-cli upload -p ' .. arduino_port .. ' --fqbn arduino:avr:uno %<CR>', { desc = 'Upload Arduino sketch' })
 
 -- Toggles
 map('n', '<leader>tn', ':set relativenumber!<CR>', { desc = 'Toggle relative numbers' })

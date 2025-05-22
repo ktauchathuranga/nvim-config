@@ -1,10 +1,10 @@
--- C:\Users\Ashen Chathuranga\AppData\Local\nvim\lua\core\options.lua
+-- ~/.config/nvim/lua/core/options.lua
 -- Core Neovim Options
 
 local opt = vim.opt
 local g = vim.g
 
--- Leader key (set in init.lua for consistency)
+-- Leader keys
 g.mapleader = ' '
 g.maplocalleader = ' '
 

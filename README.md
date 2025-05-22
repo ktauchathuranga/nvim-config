@@ -1,20 +1,20 @@
 # Neovim Configuration
 
-Welcome to my personal Neovim configuration, a modern, modular setup built on top of [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim). This configuration is designed for productivity, portability, and a delightful coding experience across Windows, Linux, and macOS. It’s tailored for Rust, Arduino, Java, and general development (e.g., Lua, UI development), with robust support for LSP, autocompletion, debugging, Git integration, and a sleek UI.
+A modern, standalone Neovim configuration designed for productivity and portability across Windows, Linux, and macOS. Tailored for Rust, Arduino, Java, and general development (e.g., Lua, UI), it provides robust LSP, autocompletion, debugging, Git integration, and a sleek UI.
 
 ## Features
 
-- **Plugin Management**: Uses [lazy.nvim](https://github.com/folke/lazy.nvim) for fast, lazy-loaded plugins.
+- **Plugin Management**: [lazy.nvim](https://github.com/folke/lazy.nvim) for fast, lazy-loaded plugins.
 - **LSP Support**: Configured for Rust (`rust_analyzer`), Arduino (`arduino_language_server`), Java (`jdtls`), and Lua (`lua_ls`) via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) and [mason.nvim](https://github.com/williamboman/mason.nvim).
-- **Autocompletion**: Powered by [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) for intelligent code completion.
-- **Debugging**: Integrated DAP ([nvim-dap](https://github.com/mfussenegger/nvim-dap)) for Rust and Arduino with a user-friendly UI.
+- **Autocompletion**: [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) for intelligent code completion.
+- **Debugging**: [nvim-dap](https://github.com/mfussenegger/nvim-dap) for Rust and Arduino with a user-friendly UI.
 - **File Navigation**: [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) for file exploration and [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
 - **UI Enhancements**: [tokyonight](https://github.com/folke/tokyonight.nvim) theme, [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) statusline, [bufferline.nvim](https://github.com/akinsho/bufferline.nvim) for tabs, and [alpha-nvim](https://github.com/goolord/alpha-nvim) dashboard.
 - **Git Integration**: [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) for Git gutter signs and operations.
 - **Code Formatting**: [conform.nvim](https://github.com/stevearc/conform.nvim) for automatic formatting (e.g., `rustfmt`, `google-java-format`).
-- **Session Management**: [persistence.nvim](https://github.com/folke/persistence.nvim) for saving and restoring sessions.
+- **Session Management**: [persistence.nvim](https://github.com/folke/persistence.nvim) for saving/restoring sessions.
 - **Treesitter**: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) for enhanced syntax highlighting and indentation.
-- **Portability**: Cross-platform with minimal platform-specific tweaks (e.g., Arduino ports).
+- **Portability**: Cross-platform with platform-specific Arduino port handling.
 
 ## Directory Structure
 
@@ -45,7 +45,7 @@ Welcome to my personal Neovim configuration, a modern, modular setup built on to
 
 ## Prerequisites
 
-Before setting up, ensure the following tools are installed:
+Ensure the following tools are installed:
 
 | Tool                     | Purpose                              | Windows Install                   | Linux Install (Ubuntu)            |
 |--------------------------|--------------------------------------|-----------------------------------|-----------------------------------|
@@ -61,7 +61,7 @@ Before setting up, ensure the following tools are installed:
 | Rust (cargo, rustfmt)    | Rust development                     | `choco install rust`             | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
 | Java (JDK 17)            | Java development                     | `choco install openjdk17`        | `sudo apt install openjdk-17-jdk` |
 
-Install LSP servers globally via npm:
+Install LSP servers:
 ```bash
 npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza.jdtls
 ```
@@ -71,7 +71,7 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
 ### Windows
 
 1. **Install Dependencies**:
-   Run in an elevated Command Prompt or PowerShell:
+   In an elevated Command Prompt or PowerShell:
    ```bash
    choco install -y neovim git ripgrep fd arduino-cli llvm nodejs openjdk17 rust
    npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza.jdtls
@@ -83,23 +83,23 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
    git clone https://github.com/ktauchathuranga/nvim-config $HOME\AppData\Local\nvim
    ```
 
-3. **Adjust Arduino Port**:
-   - Open `lua/core/keymaps.lua`.
-   - Ensure the Arduino upload keymap uses your port (e.g., `COM3`):
-     ```lua
-     map('n', '<leader>au', ':!arduino-cli upload -p COM3 --fqbn arduino:avr:uno %<CR>', { desc = 'Upload Arduino sketch' })
-     ```
-   - Find your port using:
+3. **Verify Arduino Port**:
+   - The configuration uses `COM3` by default (see `lua/core/keymaps.lua`).
+   - Check your port:
      ```bash
      arduino-cli board list
+     ```
+   - Update `lua/core/keymaps.lua` if needed:
+     ```lua
+     local arduino_port = vim.fn.has('win32') == 1 and 'YOUR_PORT' or '/dev/ttyACM0'
      ```
 
 4. **Launch Neovim**:
    ```bash
    nvim
    ```
-   - `lazy.nvim` will install plugins automatically.
-   - Run `:Lazy sync` if plugins don’t load.
+   - Plugins install via `lazy.nvim`.
+   - Run `:Lazy sync` if needed.
 
 5. **Format Configuration**:
    ```bash
@@ -107,8 +107,8 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
    ```
 
 6. **Verify Setup**:
-   - Run `:checkhealth` to ensure dependencies are installed.
-   - Open a `.rs`, `.ino`, or `.java` file and test LSP (e.g., `gd` for go-to-definition).
+   - Run `:checkhealth` to check dependencies.
+   - Test LSP in a `.rs`, `.ino`, or `.java` file (e.g., `gd` for go-to-definition).
    - Use `:Mason` to verify LSP servers.
 
 ### Linux (Ubuntu/Debian)
@@ -128,28 +128,25 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
    git clone https://github.com/ktauchathuranga/nvim-config ~/.config/nvim
    ```
 
-3. **Adjust Arduino Port**:
-   - Open `lua/core/keymaps.lua`.
-   - Update the Arduino upload keymap to use a Linux port (e.g., `/dev/ttyACM0`):
-     ```lua
-     map('n', '<leader>au', ':!arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno %<CR>', { desc = 'Upload Arduino sketch' })
-     ```
-   - Find your port:
+3. **Verify Arduino Port**:
+   - The configuration uses `/dev/ttyACM0` by default (see `lua/core/keymaps.lua`).
+   - Check your port:
      ```bash
      ls /dev/tty*
      ```
-   - Add your user to the `dialout` group for port access:
+   - Update `lua/core/keymaps.lua` if needed.
+   - Ensure port access:
      ```bash
      sudo usermod -a -G dialout $USER
      ```
      Log out and back in.
 
 4. **Install Nerd Font** (Optional):
-   For proper icon display (e.g., diagnostics, indent guides):
+   For icon display:
    ```bash
    sudo apt install fonts-firacode
    ```
-   Set your terminal (e.g., GNOME Terminal) to “Fira Code Nerd Font”.
+   Set terminal to “Fira Code Nerd Font”.
 
 5. **Launch Neovim**:
    ```bash
@@ -165,7 +162,7 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
 
 7. **Verify Setup**:
    - Run `:checkhealth` to check dependencies.
-   - Test LSP in a `.rs`, `.ino`, or `.java` file (e.g., `<leader>ca` for code actions).
+   - Test LSP in a `.rs`, `.ino`, or `.java` file.
    - Use `:Mason` to check LSP servers.
 
 ## Usage
@@ -175,11 +172,11 @@ npm install -g @rust-lang/rust-analyzer @arduino/arduino-language-server @fsouza
 cd ~/projects/my-rust-app
 nvim .
 ```
-- The [Alpha dashboard](https://github.com/goolord/alpha-nvim) appears.
-- Press `f` to search files with Telescope or `e` to open NvimTree.
+- The Alpha dashboard appears.
+- Press `f` to search files or `e` to open NvimTree.
 
 ### Keybindings
-Keybindings are defined in `lua/core/keymaps.lua`. Common ones include:
+Defined in `lua/core/keymaps.lua`. Key examples:
 
 | Keybinding       | Action                              | Description                       |
 |------------------|-------------------------------------|-----------------------------------|
@@ -199,17 +196,17 @@ Keybindings are defined in `lua/core/keymaps.lua`. Common ones include:
 | `<leader>w`      | `:w`                                | Save file                        |
 | `<leader>qs`     | Restore session                     | Reload last session              |
 
-- Leader key is `<Space>`.
-- View all keymaps: `:map` or check `lua/core/keymaps.lua`.
+- Leader key: `<Space>`.
+- View all keymaps: `:map` or `lua/core/keymaps.lua`.
 
 ### Coding Workflow
 1. **Navigate**:
-   - `<leader>e`: Open NvimTree to browse files.
+   - `<leader>e`: Browse files with NvimTree.
    - `<leader>sf`: Find files with Telescope.
 
 2. **Write Code**:
-   - Use `nvim-cmp` for autocompletion (`<C-n>`/`<C-p>` to navigate, `<CR>` to select).
-   - Leverage LSP: `gd` (go-to-definition), `<leader>rn` (rename), `<leader>d` (diagnostics).
+   - Autocompletion with `nvim-cmp` (`<C-n>`/`<C-p>`, `<CR>` to select).
+   - LSP: `gd` (go-to-definition), `<leader>rn` (rename), `<leader>d` (diagnostics).
 
 3. **Format**:
    - `<leader>f`: Format with `rustfmt`, `google-java-format`, or `stylua`.
@@ -217,21 +214,21 @@ Keybindings are defined in `lua/core/keymaps.lua`. Common ones include:
 4. **Build/Run**:
    - Rust: `<leader>rb` (build), `<leader>rr` (run), `<leader>rt` (test).
    - Arduino: `<leader>ac` (compile), `<leader>au` (upload).
-   - Java: Add custom keymap in `lua/core/keymaps.lua` (e.g., `:!javac % && java %:r`).
+   - Java: Add keymap in `lua/core/keymaps.lua` (e.g., `:!javac % && java %:r`).
 
 5. **Debug**:
    - `<leader>db`: Set breakpoint.
-   - `<leader>dd`: Start debugging (enter executable path, e.g., `target/debug/my-rust-app`).
+   - `<leader>dd`: Start debugging.
    - `<leader>du`: Toggle DAP UI.
 
 6. **Git**:
    - `<leader>hs`: Stage hunk.
    - `]c`/`[c`: Navigate hunks.
-   - Commit in terminal: `git commit -m "message"`.
+   - Commit: `git commit -m "message"`.
 
 7. **Save/Quit**:
    - `<leader>w`: Save.
-   - `<leader>q`: Quit window.
+   - `<leader>q`: Quit.
    - `<leader>qs`: Restore session.
 
 ### Example: Rust Project
@@ -262,70 +259,49 @@ nvim .
 ## Customization
 
 - **Add LSPs**:
-  Edit `lua/plugins/lsp.lua` to add servers (e.g., Python with `pyright`):
+  In `lua/plugins/lsp.lua`:
   ```lua
   pyright = {},
   ```
 
 - **Change Theme**:
-  Modify `lua/plugins/ui.lua` to try `tokyonight` variants (`storm`, `moon`, `day`) or add new themes:
+  In `lua/plugins/ui.lua`:
   ```lua
   { 'catppuccin/nvim', as = 'catppuccin', config = function() vim.cmd 'colorscheme catppuccin' end },
   ```
 
 - **Custom Keymaps**:
-  Add to `lua/core/keymaps.lua`, e.g., for Java:
+  In `lua/core/keymaps.lua`:
   ```lua
   map('n', '<leader>jr', ':!javac % && java %:r<CR>', { desc = 'Run Java file' })
-  ```
-
-- **Platform-Specific Settings**:
-  Use `vim.fn.has('win32')` for conditional keymaps:
-  ```lua
-  local arduino_port = vim.fn.has('win32') == 1 and 'COM3' or '/dev/ttyACM0'
-  map('n', '<leader>au', ':!arduino-cli upload -p ' .. arduino_port .. ' --fqbn arduino:avr:uno %<CR>', { desc = 'Upload Arduino sketch' })
   ```
 
 ## Troubleshooting
 
 - **Plugins Not Loading**:
   - Run `:Lazy sync`.
-  - Check `:Lazy log` for errors.
+  - Check `:Lazy log`.
 
 - **LSP Issues**:
   - Verify servers with `:Mason`.
-  - Check `:LspInfo` for attached servers.
-  - Ensure `node`, `npm`, and LSP binaries are in PATH.
+  - Check `:LspInfo`.
+  - Ensure `node`, `npm`, LSP binaries in PATH.
 
 - **Arduino Port Errors**:
   - Verify port with `arduino-cli board list`.
-  - On Linux, ensure `dialout` group membership.
+  - Linux: Ensure `dialout` group membership.
 
 - **Slow Performance**:
-  - Run `:checkhealth` to diagnose missing dependencies.
+  - Run `:checkhealth`.
   - Disable unused plugins in `lua/plugins/init.lua`.
 
 - **Icon Display**:
-  - Install a Nerd Font and configure your terminal.
+  - Install Nerd Font and configure terminal.
 
 ## Contributing
 
-Feel free to fork this repository, make improvements, and submit pull requests. Issues and suggestions are welcome on the [GitHub Issues page](https://github.com/ktauchathuranga/nvim-config/issues).
+Fork, improve, and submit pull requests. Issues/suggestions welcome on [GitHub Issues](https://github.com/ktauchathuranga/nvim-config/issues).
 
 ## License
 
-This configuration is licensed under the [MIT License](LICENSE).
-
-## Acknowledgments
-
-- Inspired by [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) for its minimalist approach.[](https://github.com/nvim-lua/kickstart.nvim)
-- Thanks to the Neovim community for amazing plugins like `lazy.nvim`, `nvim-lspconfig`, and `tokyonight`.
-
----
-
-### Notes
-- **Repository Reference**: The README references your GitHub repository (`https://github.com/ktauchathuranga/nvim-config`) as the source. Ensure the repository is public or accessible for cloning.
-- **Cross-Platform**: The configuration is portable, with the only platform-specific tweak being the Arduino port in `keymaps.lua`.
-- **Dependencies**: The README lists all required tools, matching your configuration’s needs (e.g., `ripgrep` for Telescope, `lldb` for DAP).
-- **Customization**: Instructions for extending the config are included, aligning with your interests in Rust, Arduino, and Java.
-- **Sources**: The README incorporates best practices from Neovim community standards and references `kickstart.nvim` for its foundational role.[](https://github.com/nvim-lua/kickstart.nvim)
+[MIT License](LICENSE).

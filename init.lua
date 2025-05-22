@@ -1,9 +1,9 @@
--- C:\Users\Ashen Chathuranga\AppData\Local\nvim\init.lua
--- Professional Neovim Configuration
+-- ~/.config/nvim/init.lua or ~/AppData/Local/nvim/init.lua
+-- Standalone Neovim Configuration
 -- Author: Ashen Chathuranga
--- Based on kickstart.nvim
+-- Repository: https://github.com/ktauchathuranga/nvim-config
 
--- Set leader keys before plugins
+-- Set leader keys
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 

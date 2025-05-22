@@ -1,4 +1,4 @@
--- C:\Users\Ashen Chathuranga\AppData\Local\nvim\lua\plugins\init.lua
+-- ~/.config/nvim/lua/plugins/init.lua
 -- Plugin Manager
 
 return require('lazy').setup({
