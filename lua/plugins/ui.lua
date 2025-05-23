@@ -101,24 +101,23 @@ return {
       local dashboard = require 'alpha.themes.dashboard'
       dashboard.section.header.val = {
         [[                                                                       ]],
-        [[       ████ ██████           █████      ██                     ]],
-        [[      ███████████             █████                             ]],
-        [[      █████████ ███████████████████ ███   ███████████   ]],
-        [[     █████████  ███    █████████████ █████ ██████████████   ]],
-        [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-        [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-        [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+        [[                                  __                                  ]],
+        [[                    ___   __  __ /\_\    ___ ___                      ]],
+        [[                  /' _ `\/\ \/\ \\/\ \ /' __` __`\                    ]],
+        [[                  /\ \/\ \ \ \_/ |\ \ \/\ \/\ \/\ \                   ]],
+        [[                  \ \_\ \_\ \___/  \ \_\ \_\ \_\ \_\                  ]],
+        [[                   \/_/\/_/\/__/    \/_/\/_/\/_/\/_/                  ]],
         [[                                                                       ]],
       }
       dashboard.section.buttons.val = {
-        dashboard.button('f', '📂 Find file', ':Telescope find_files <CR>'),
-        dashboard.button('n', '📝 New file', ':ene <BAR> startinsert <CR>'),
-        dashboard.button('r', '🕒 Recent files', ':Telescope oldfiles <CR>'),
-        dashboard.button('g', '🔍 Find text', ':Telescope live_grep <CR>'),
-        dashboard.button('c', '⚙️ Config', ':e $MYVIMRC <CR>'),
-        dashboard.button('s', '💾 Restore Session', ':lua require("persistence").load() <CR>'),
-        dashboard.button('l', '🔌 Lazy', ':Lazy<CR>'),
-        dashboard.button('q', '🚪 Quit', ':qa<CR>'),
+        dashboard.button('f', '[-] Find file', ':Telescope find_files <CR>'),
+        dashboard.button('n', '[-] New file', ':ene <BAR> startinsert <CR>'),
+        dashboard.button('r', '[-] Recent files', ':Telescope oldfiles <CR>'),
+        dashboard.button('g', '[-] Find text', ':Telescope live_grep <CR>'),
+        dashboard.button('c', '[-] Config', ':e $MYVIMRC <CR>'),
+        dashboard.button('s', '[-] Restore Session', ':lua require("persistence").load() <CR>'),
+        dashboard.button('l', '[-] Lazy', ':Lazy<CR>'),
+        dashboard.button('q', '[-] Quit', ':qa<CR>'),
       }
       dashboard.section.footer.val = 'Neovim loaded ' .. require('lazy').stats().count .. ' plugins'
       dashboard.config.opts.noautocmd = true
