@@ -1,6 +1,6 @@
 # nvim-config
 
-A lightweight Neovim configuration tailored for efficient Git workflows, written in Lua. This configuration provides custom keybindings to execute common Git commands directly from Neovim, without relying on third-party plugins. It’s designed for simplicity and speed, ideal for developers working on Arch Linux, Windows, or other platforms.
+A lightweight Neo-vim configuration tailored for efficient Git workflows, written in Lua. This configuration provides custom keybindings to execute common Git commands directly from Neovim, without relying on third-party plugins. It’s designed for simplicity and speed, ideal for developers working on Arch Linux, Windows, or other platforms.
 
 ## Features
 
