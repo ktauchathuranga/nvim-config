@@ -12,7 +12,7 @@ vim.keymap.set('n', '<leader>gb', ':!git branch<CR>', { noremap = true, silent =
 vim.keymap.set('n', '<leader>gi', ':!git init<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gv', ':!git remote -v<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gr', function() add_git_remote() end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>gpl', function() smart_git_pull() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gpl', function() smart_git_pull() end, { noremap = true, silent = false })
 
 -- Function to check if in a Git repository
 function is_git_repo()
@@ -60,10 +60,17 @@ function smart_git_pull()
         return
     end
     local branch = get_current_branch()
+    local cmd
     if has_upstream() then
-        vim.fn.system('git pull --no-rebase --allow-unrelated-histories')
+        cmd = 'git pull --no-rebase --allow-unrelated-histories'
     else
-        vim.fn.system('git pull --no-rebase --allow-unrelated-histories --set-upstream origin ' .. vim.fn.shellescape(branch))
+        cmd = 'git pull --no-rebase --allow-unrelated-histories --set-upstream origin ' .. vim.fn.shellescape(branch)
+    end
+    local output = vim.fn.system(cmd)
+    if vim.v.shell_error == 0 then
+        print("Git pull successful: " .. output)
+    else
+        print("Git pull failed: " .. output)
     end
 end
 
