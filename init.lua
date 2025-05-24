@@ -14,9 +14,9 @@ vim.g.maplocalleader = ','
 
 -- Basic options
 vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.numberwidth = 4
-vim.opt.signcolumn = "yes"
+vim.opt.relativenumber = false
+vim.opt.numberwidth = 6  -- Increased from 4 to 6 for larger files
+vim.opt.signcolumn = "auto"  -- Only show sign column when needed
 vim.opt.wrap = false
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
@@ -210,6 +210,12 @@ vim.keymap.set('n', '<leader>co', ':copen<CR>', { noremap = true, silent = true 
 vim.keymap.set('n', '<leader>cc', ':cclose<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>cn', ':cnext<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>cp', ':cprevious<CR>', { noremap = true, silent = true })
+
+-- Toggle relative line numbers
+vim.keymap.set('n', '<leader>ln', function()
+    vim.opt.relativenumber = not vim.opt.relativenumber
+    print("Relative numbers " .. (vim.opt.relativenumber:get() and "enabled" or "disabled"))
+end, { noremap = true, silent = false, desc = "Toggle relative line numbers" })
 
 -- ================================
 -- DEVELOPMENT KEY MAPPINGS
@@ -638,6 +644,16 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         local lcount = vim.api.nvim_buf_line_count(0)
         if mark[1] > 0 and mark[1] <= lcount then
             pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
+})
+
+-- Disable relative numbers for large files
+vim.api.nvim_create_autocmd("BufReadPost", {
+    pattern = "*",
+    callback = function()
+        if vim.api.nvim_buf_line_count(0) > 10000 then
+            vim.opt_local.relativenumber = false
         end
     end,
 })
