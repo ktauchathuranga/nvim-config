@@ -4,7 +4,7 @@ vim.g.mapleader = ' '
 -- Git keybindings
 vim.keymap.set('n', '<leader>ga', ':!git add .<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gc', ':!git commit -m ""<Left>', { noremap = true, silent = false })
-vim.keymap.set('n', '<leader>gp', function() smart_git_push() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gp', function() smart_git_push() end, { noremap = true, silent = false })
 vim.keymap.set('n', '<leader>gs', ':!git status<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gd', ':!git diff<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gl', ':!git log --oneline --graph --all<CR>', { noremap = true, silent = true })
@@ -32,17 +32,24 @@ function has_upstream()
     return vim.v.shell_error == 0
 end
 
--- Smart git push with upstream handling
+-- Smart git push with upstream handling and feedback
 function smart_git_push()
     if not is_git_repo() then
         print("Not a git repository")
         return
     end
     local branch = get_current_branch()
+    local cmd
     if has_upstream() then
-        vim.fn.system('git push')
+        cmd = 'git push'
     else
-        vim.fn.system('git push --set-upstream origin ' .. vim.fn.shellescape(branch))
+        cmd = 'git push --set-upstream origin ' .. vim.fn.shellescape(branch)
+    end
+    local output = vim.fn.system(cmd)
+    if vim.v.shell_error == 0 then
+        print("Git push successful: " .. output)
+    else
+        print("Git push failed: " .. output)
     end
 end
 
@@ -75,4 +82,3 @@ function add_git_remote()
     vim.fn.system('git remote add ' .. vim.fn.shellescape(remote_name) .. ' ' .. vim.fn.shellescape(remote_url))
     print("Added remote " .. remote_name .. " with URL " .. remote_url)
 end
-
