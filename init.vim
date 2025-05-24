@@ -46,7 +46,7 @@ function! SmartGitPush()
     endif
 endfunction
 
-" Smart git pull with upstream handling
+" Smart git pull with upstream and merge strategy
 function! SmartGitPull()
     if !IsGitRepo()
         echo "Not a git repository"
@@ -54,9 +54,9 @@ function! SmartGitPull()
     endif
     let branch = GetCurrentBranch()
     if HasUpstream()
-        execute '!git pull'
+        execute '!git pull --no-rebase --allow-unrelated-histories'
     else
-        execute '!git pull --set-upstream origin ' . shellescape(branch)
+        execute '!git pull --no-rebase --allow-unrelated-histories --set-upstream origin ' . shellescape(branch)
     endif
 endfunction
 
