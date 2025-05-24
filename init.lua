@@ -34,6 +34,7 @@ end
 
 -- Smart git push with upstream handling and feedback
 function smart_git_push()
+    print("Starting git push...")
     if not is_git_repo() then
         print("Not a git repository")
         return
@@ -43,7 +44,7 @@ function smart_git_push()
     if has_upstream() then
         cmd = 'git push'
     else
-        cmd = 'git push --set-upstream origin ' .. vim.fn.shellescape(branch)
+        cmd = 'git push --stop-upstream origin ' .. vim.fn.shellescape(branch)
     end
     local output = vim.fn.system(cmd)
     if vim.v.shell_error == 0 then
@@ -55,6 +56,7 @@ end
 
 -- Smart git pull with upstream and merge strategy
 function smart_git_pull()
+    print("Starting git pull...")
     if not is_git_repo() then
         print("Not a git repository")
         return
