@@ -12,7 +12,7 @@ A lightweight Neovim configuration tailored for efficient Git workflows, written
 ## Installation
 
 1. **Clone the Repository**:
-   `n``bash
+   ```bash
    git clone https://github.com/your-username/nvim-config.git ~/.config/nvim
    ```
    Replace `your-username` with your GitHub username.
