@@ -1,6 +1,10 @@
 -- Set leader key
 vim.g.mapleader = ' '
 
+-- Line numbers
+vim.opt.number = true
+vim.opt.relativenumber = false
+
 -- Auto-change directory to the one provided as an argument
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
