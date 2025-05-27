@@ -17,7 +17,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 50
-vim.opt.colorcolumn = '80'
+-- vim.opt.colorcolumn = '80'
 
 -- Auto-change directory to the one provided as an argument
 vim.api.nvim_create_autocmd("VimEnter", {
