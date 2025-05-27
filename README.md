@@ -4,7 +4,6 @@ A modern, feature-rich Neovim configuration tailored for efficient coding, Git w
 
 ![Screenshot From 2025-05-27 12-54-46](https://github.com/user-attachments/assets/af05bb7b-ceda-486d-9127-89aeb112419e)
 
-
 ## Features
 
 - **Plugin Management with lazy.nvim**: Automatically installs and manages plugins like LSP, completion, Treesitter, file explorer, fuzzy finder, and more.
