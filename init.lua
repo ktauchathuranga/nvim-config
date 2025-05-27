@@ -622,3 +622,130 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
+
+-- Custom home screen
+local function create_welcome_screen()
+  -- Create a new buffer
+  local buf = vim.api.nvim_create_buf(false, true) -- false: not listed, true: scratch buffer
+  vim.api.nvim_set_current_buf(buf)
+
+  -- Define ASCII art
+  local logo = {
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⡤⣤⢤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠛⠉⠀⠀⠀⠀⠀⠀⠉⠻⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠏⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠈⢻⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠯⠀⠀⠀⢰⣿⣿⣿⣆⡀⣴⣾⣿⣦⡈⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣏⠀⠀⠀⠀⢸⣿⣿⣿⡿⠇⣿⣿⣿⣿⠆⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⠀⠀⠈⠿⠿⡿⠃⠀⢿⣿⣿⠏⠀⠀⢹⣗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⡐⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠘⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⡁⡿⠄⠀⢀⡷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠂⠀⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⣻⡷⠀⠠⣼⡗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣦⠀⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⢠⡿⠃⠀⢡⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠸⣿⠆⠀⠸⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⢀⣿⠓⠀⠀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡧⠀⠀⠹⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⢰⣾⡃⠀⠀⠀⣿⡄⠀⠀⠀⠀⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⡀⠀⢮⠿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⣨⡿⠃⠀⠀⠀⢠⡿⠀⠀⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠁⠚⣷⡀⠀⣀⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⣠⡾⠋⠀⠀⠀⠰⠀⢸⣇⠀⠀⠀⠀⠀⠀⠈⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣷⡿⠛⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠐⠿⠶⠶⠶⢤⣤⣤⣤⣼⣇⠀⠀⠀⠀⠀⡀⠀⡘⣷⠀⠀⠀⠀⠀⠀⠀⠈⢀⠀⠈⣿⣄⠀⠃⠀⠀⠀⠀⠀⠀⠀⢀]],
+    [[⠀⠀⠀⢀⠀⠀⠁⢻⣏⠉⣿⡀⠀⠀⠀⠘⠅⠀⣈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⢻⣶⡿⠃⠀⠀⢀⣬⣾⣿⡻⠋⣿⡆⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⡿⠯⠶⠾⠛⠁⠈⠘⣷⣿⠏⠀⢀⣴⠾⠋⠉⠉⠉⠙⠉⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣮⠷⠟⠉⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+    "",
+  }
+
+  -- Define shortcut details
+  local shortcuts = {
+    "Keybindings:",
+    "  <leader>e  : Toggle file explorer (NvimTree)",
+    "  <leader>ff : Find files (Telescope)",
+    "  <leader>fg : Live grep (Telescope)",
+    "  <leader>fh : Help tags (Telescope)",
+    "  <leader>ga : Git add all",
+    "  <leader>gf : Git add specific file",
+    "  <leader>gc : Git commit",
+    "  <leader>gp : Git push",
+    "  <leader>gs : Git status",
+    "  <leader>gb : Git branch",
+    "  <leader>gi : Git init",
+    "  <leader>gr : Add git remote",
+    "  <leader>gpl: Git pull",
+    "  <leader>w  : Write file",
+    "  <leader>q  : Quit",
+    "  <leader>q! : Quit without saving",
+    "  <leader>nf : Create new file",
+  }
+
+  -- Define top margin (number of empty lines)
+  local top_margin = 2
+  local margin_lines = {}
+  for i = 1, top_margin do
+    table.insert(margin_lines, "")
+  end
+
+  -- Combine margin, logo, and shortcuts
+  local lines = vim.list_extend(margin_lines, vim.list_extend(logo, shortcuts))
+
+  -- Calculate the maximum line width
+  local max_width = 0
+  for _, line in ipairs(lines) do
+    max_width = math.max(max_width, vim.fn.strwidth(line)) -- Use strwidth for accurate width with Unicode
+  end
+
+  -- Get the window width
+  local win_width = vim.api.nvim_get_option("columns")
+
+  -- Calculate padding to center the content
+  local padding = math.floor((win_width - max_width) / 2)
+  if padding < 0 then padding = 0 end -- Ensure non-negative padding
+
+  -- Add padding to each line
+  local padded_lines = {}
+  for _, line in ipairs(lines) do
+    table.insert(padded_lines, string.rep(" ", padding) .. line)
+  end
+
+  -- Set the lines in the buffer
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, padded_lines)
+
+  -- Buffer options
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe') -- Delete buffer when hidden
+  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile') -- Not a file
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false) -- Read-only
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'welcome') -- Custom filetype
+
+  -- Highlighting
+  for i = 1, top_margin do
+    vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', i - 1, 0, -1) -- Empty lines
+  end
+  for i = 1, #logo do
+    vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', top_margin + i - 1, 0, -1) -- Logo
+  end
+  for i = 1, #shortcuts do
+    vim.api.nvim_buf_add_highlight(buf, -1, 'Comment', top_margin + #logo + i - 1, 0, -1) -- Shortcuts
+  end
+
+  -- Keymappings for the welcome buffer
+  local opts = { noremap = true, silent = true, buffer = buf }
+  vim.keymap.set('n', 'q', ':q<CR>', opts) -- Quit the welcome screen
+  vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', opts)
+  vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>', opts)
+  vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', opts)
+  vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', opts)
+  vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', opts)
+
+  -- Window options
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+  vim.wo.signcolumn = 'no'
+  vim.wo.cursorline = false
+end
+
+-- Autocommand to trigger the welcome screen
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argc() == 0 and vim.fn.line2byte(1) == -1 then -- No file opened
+      create_welcome_screen()
+    end
+  end,
+})
