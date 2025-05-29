@@ -653,6 +653,11 @@ local function create_welcome_screen()
     "",
   }
   
+  local name = {
+    "Ashen Chathuranga | open-source is 0x2661",
+    "", -- Empty line for spacing
+  }
+
   local shortcuts = {
     "Essential Keybindings:",
     "",
@@ -668,10 +673,15 @@ local function create_welcome_screen()
     table.insert(margin_lines, "")
   end
 
-  -- Calculate the maximum line width for logo and shortcuts separately
+  -- Calculate the maximum line width for logo, name, and shortcuts separately
   local max_logo_width = 0
   for _, line in ipairs(logo) do
     max_logo_width = math.max(max_logo_width, vim.fn.strwidth(line))
+  end
+
+  local max_name_width = 0
+  for _, line in ipairs(name) do
+    max_name_width = math.max(max_name_width, vim.fn.strwidth(line))
   end
 
   local max_shortcuts_width = 0
@@ -684,8 +694,10 @@ local function create_welcome_screen()
 
   -- Calculate padding to center each section
   local logo_padding = math.floor((win_width - max_logo_width) / 2)
+  local name_padding = math.floor((win_width - max_name_width) / 2)
   local shortcuts_padding = math.floor((win_width - max_shortcuts_width) / 2)
   if logo_padding < 0 then logo_padding = 0 end
+  if name_padding < 0 then name_padding = 0 end
   if shortcuts_padding < 0 then shortcuts_padding = 0 end
 
   -- Add padding to each section
@@ -695,6 +707,9 @@ local function create_welcome_screen()
   end
   for _, line in ipairs(logo) do
     table.insert(padded_lines, string.rep(" ", logo_padding) .. line)
+  end
+  for _, line in ipairs(name) do
+    table.insert(padded_lines, string.rep(" ", name_padding) .. line)
   end
   for _, line in ipairs(shortcuts) do
     table.insert(padded_lines, string.rep(" ", shortcuts_padding) .. line)
@@ -716,8 +731,11 @@ local function create_welcome_screen()
   for i = 1, #logo do
     vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', top_margin + i - 1, 0, -1) -- Logo
   end
+  for i = 1, #name do
+    vim.api.nvim_buf_add_highlight(buf, -1, 'Title', top_margin + #logo + i - 1, 0, -1) -- Name
+  end
   for i = 1, #shortcuts do
-    vim.api.nvim_buf_add_highlight(buf, -1, 'Comment', top_margin + #logo + i - 1, 0, -1) -- Shortcuts
+    vim.api.nvim_buf_add_highlight(buf, -1, 'Comment', top_margin + #logo + #name + i - 1, 0, -1) -- Shortcuts
   end
 
   -- Keymappings for the welcome buffer
