@@ -623,7 +623,6 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
--- Custom home screen
 local function create_welcome_screen()
   -- Create a new buffer
   local buf = vim.api.nvim_create_buf(false, true) -- false: not listed, true: scratch buffer
@@ -653,27 +652,13 @@ local function create_welcome_screen()
     [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣮⠷⠟⠉⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
     "",
   }
-
-  -- Define shortcut details
+  
   local shortcuts = {
-    "Keybindings:",
-    "  <leader>e  : Toggle file explorer (NvimTree)",
-    "  <leader>ff : Find files (Telescope)",
-    "  <leader>fg : Live grep (Telescope)",
-    "  <leader>fh : Help tags (Telescope)",
-    "  <leader>ga : Git add all",
-    "  <leader>gf : Git add specific file",
-    "  <leader>gc : Git commit",
-    "  <leader>gp : Git push",
-    "  <leader>gs : Git status",
-    "  <leader>gb : Git branch",
-    "  <leader>gi : Git init",
-    "  <leader>gr : Add git remote",
-    "  <leader>gpl: Git pull",
-    "  <leader>w  : Write file",
-    "  <leader>q  : Quit",
-    "  <leader>q! : Quit without saving",
-    "  <leader>nf : Create new file",
+    "Essential Keybindings:",
+    "",
+    "<leader>e : Explorer    <leader>ff: Find Files    <leader>fg: Search",
+    "<leader>ga: Git Add     <leader>gc: Git Commit    <leader>gp: Git Push",
+    "<leader>w : Save        <leader>q : Quit          Press 'q' to close",
   }
 
   -- Define top margin (number of empty lines)
@@ -683,26 +668,36 @@ local function create_welcome_screen()
     table.insert(margin_lines, "")
   end
 
-  -- Combine margin, logo, and shortcuts
-  local lines = vim.list_extend(margin_lines, vim.list_extend(logo, shortcuts))
+  -- Calculate the maximum line width for logo and shortcuts separately
+  local max_logo_width = 0
+  for _, line in ipairs(logo) do
+    max_logo_width = math.max(max_logo_width, vim.fn.strwidth(line))
+  end
 
-  -- Calculate the maximum line width
-  local max_width = 0
-  for _, line in ipairs(lines) do
-    max_width = math.max(max_width, vim.fn.strwidth(line)) -- Use strwidth for accurate width with Unicode
+  local max_shortcuts_width = 0
+  for _, line in ipairs(shortcuts) do
+    max_shortcuts_width = math.max(max_shortcuts_width, vim.fn.strwidth(line))
   end
 
   -- Get the window width
   local win_width = vim.api.nvim_get_option("columns")
 
-  -- Calculate padding to center the content
-  local padding = math.floor((win_width - max_width) / 2)
-  if padding < 0 then padding = 0 end -- Ensure non-negative padding
+  -- Calculate padding to center each section
+  local logo_padding = math.floor((win_width - max_logo_width) / 2)
+  local shortcuts_padding = math.floor((win_width - max_shortcuts_width) / 2)
+  if logo_padding < 0 then logo_padding = 0 end
+  if shortcuts_padding < 0 then shortcuts_padding = 0 end
 
-  -- Add padding to each line
+  -- Add padding to each section
   local padded_lines = {}
-  for _, line in ipairs(lines) do
-    table.insert(padded_lines, string.rep(" ", padding) .. line)
+  for _, line in ipairs(margin_lines) do
+    table.insert(padded_lines, line) -- No padding for empty margin lines
+  end
+  for _, line in ipairs(logo) do
+    table.insert(padded_lines, string.rep(" ", logo_padding) .. line)
+  end
+  for _, line in ipairs(shortcuts) do
+    table.insert(padded_lines, string.rep(" ", shortcuts_padding) .. line)
   end
 
   -- Set the lines in the buffer
