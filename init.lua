@@ -654,7 +654,7 @@ local function create_welcome_screen()
   }
   
   local name = {
-    "Ashen Chathuranga | open-source is 0x2661",
+    "Ashen Chathuranga | open-source is ♥",
     "", -- Empty line for spacing
   }
 
