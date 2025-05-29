@@ -27,10 +27,9 @@ A modern, feature-rich Neovim configuration tailored for efficient coding, Git w
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/nvim-config.git ~/.config/nvim
+   git clone https://github.com/ktauchathuranga/nvim-config.git ~/.config/nvim
    ```
-   Replace `your-username` with your GitHub username.
-
+   
 2. **Ensure Neovim is Installed**:
    On Arch Linux:
    ```bash
