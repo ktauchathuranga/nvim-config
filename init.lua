@@ -3,7 +3,7 @@ vim.g.mapleader = ' '
 
 -- Basic settings
 vim.opt.number = true
-vim.opt.relativenumber = false
+vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
@@ -32,190 +32,190 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
 -- Plugin configuration
 require("lazy").setup({
-  -- LSP Configuration
-  {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'hrsh7th/cmp-nvim-lsp',
+    -- LSP Configuration
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'hrsh7th/cmp-nvim-lsp',
+        },
     },
-  },
 
-  -- Mason for managing LSP servers
-  {
-    'williamboman/mason.nvim',
-    config = function()
-      require('mason').setup()
-    end
-  },
-
-  {
-    'williamboman/mason-lspconfig.nvim',
-    config = function()
-      require('mason-lspconfig').setup({
-        ensure_installed = {
-          'clangd',        -- C/C++
-          'pyright',       -- Python
-          'jdtls',         -- Java
-          'rust_analyzer', -- Rust
-          'intelephense',  -- PHP
-          'lua_ls',        -- Lua
-        },
-        automatic_installation = true,
-      })
-    end
-  },
-
-  -- Completion
-  {
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-cmdline',
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+    -- Mason for managing LSP servers
+    {
+        'williamboman/mason.nvim',
+        config = function()
+            require('mason').setup()
+        end
     },
-  },
 
-  -- Snippets
-  {
-    'L3MON4D3/LuaSnip',
-    version = 'v2.*',
-    build = 'make install_jsregexp'
-  },
+    {
+        'williamboman/mason-lspconfig.nvim',
+        config = function()
+            require('mason-lspconfig').setup({
+                ensure_installed = {
+                    'clangd',        -- C/C++
+                    'pyright',       -- Python
+                    'jdtls',         -- Java
+                    'rust_analyzer', -- Rust
+                    'intelephense',  -- PHP
+                    'lua_ls',        -- Lua
+                },
+                automatic_installation = true,
+            })
+        end
+    },
 
-  -- Treesitter for syntax highlighting
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    config = function()
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = { 'c', 'python', 'java', 'rust', 'php', 'lua', 'vim', 'vimdoc', 'query' },
-        sync_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end
-  },
-
-  -- File explorer
-  {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('nvim-tree').setup({
-        disable_netrw = true,
-        hijack_netrw = true,
-        view = {
-          width = 30,
-          side = 'left',
+    -- Completion
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-cmdline',
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
         },
-        renderer = {
-          group_empty = true,
-        },
-        filters = {
-          dotfiles = false,
-        },
-      })
-    end
-  },
+    },
 
-  -- Fuzzy finder
-  {
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.4',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      require('telescope').setup({
-        defaults = {
-          mappings = {
-            i = {
-              ["<C-h>"] = "which_key"
-            }
-          }
-        }
-      })
-    end
-  },
+    -- Snippets
+    {
+        'L3MON4D3/LuaSnip',
+        version = 'v2.*',
+        build = 'make install_jsregexp'
+    },
 
-  -- Status line
-  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('lualine').setup({
-        options = {
-          theme = 'auto',
-          component_separators = '|',
-          section_separators = '',
-        },
-      })
-    end
-  },
+    -- Treesitter for syntax highlighting
+    {
+        'nvim-treesitter/nvim-treesitter',
+        build = ':TSUpdate',
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                ensure_installed = { 'c', 'python', 'java', 'rust', 'php', 'lua', 'vim', 'vimdoc', 'query' },
+                sync_install = false,
+                highlight = { enable = true },
+                indent = { enable = true },
+            })
+        end
+    },
 
-  -- Git integration
-  {
-    'lewis6991/gitsigns.nvim',
-    config = function()
-      require('gitsigns').setup()
-    end
-  },
+    -- File explorer
+    {
+        'nvim-tree/nvim-tree.lua',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = function()
+            require('nvim-tree').setup({
+                disable_netrw = true,
+                hijack_netrw = true,
+                view = {
+                    width = 30,
+                    side = 'left',
+                },
+                renderer = {
+                    group_empty = true,
+                },
+                filters = {
+                    dotfiles = false,
+                },
+            })
+        end
+    },
 
-  -- Formatting
-  {
-    'stevearc/conform.nvim',
-    config = function()
-      require('conform').setup({
-        formatters_by_ft = {
-          python = { 'black' },
-          rust = { 'rustfmt' },
-          c = { 'clang-format' },
-          cpp = { 'clang-format' },
-          java = { 'google-java-format' },
-          php = { 'php-cs-fixer' },
-          lua = { 'stylua' },
-        },
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_fallback = true,
-        },
-      })
-    end
-  },
+    -- Fuzzy finder
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.4',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require('telescope').setup({
+                defaults = {
+                    mappings = {
+                        i = {
+                            ["<C-h>"] = "which_key"
+                        }
+                    }
+                }
+            })
+        end
+    },
 
-  -- Which-key for keybinding help
-  {
-    'folke/which-key.nvim',
-    config = function()
-      require('which-key').setup()
-    end
-  },
+    -- Status line
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = function()
+            require('lualine').setup({
+                options = {
+                    theme = 'auto',
+                    component_separators = '|',
+                    section_separators = '',
+                },
+            })
+        end
+    },
 
-  -- Colorscheme
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'catppuccin'
-    end
-  },
+    -- Git integration
+    {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('gitsigns').setup()
+        end
+    },
+
+    -- Formatting
+    {
+        'stevearc/conform.nvim',
+        config = function()
+            require('conform').setup({
+                formatters_by_ft = {
+                    python = { 'black' },
+                    rust = { 'rustfmt' },
+                    c = { 'clang-format' },
+                    cpp = { 'clang-format' },
+                    java = { 'google-java-format' },
+                    php = { 'php-cs-fixer' },
+                    lua = { 'stylua' },
+                },
+                format_on_save = {
+                    timeout_ms = 500,
+                    lsp_fallback = true,
+                },
+            })
+        end
+    },
+
+    -- Which-key for keybinding help
+    {
+        'folke/which-key.nvim',
+        config = function()
+            require('which-key').setup()
+        end
+    },
+
+    -- Colorscheme
+    {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme 'catppuccin'
+        end
+    },
 })
 
 -- LSP Configuration
@@ -227,82 +227,82 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- LSP on_attach function
 local on_attach = function(client, bufnr)
-  local opts = { buffer = bufnr, noremap = true, silent = true }
-  
-  -- LSP keybindings
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>f', function()
-    vim.lsp.buf.format { async = true }
-  end, opts)
+    local opts = { buffer = bufnr, noremap = true, silent = true }
+
+    -- LSP keybindings
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<leader>f', function()
+        vim.lsp.buf.format { async = true }
+    end, opts)
 end
 
 -- Configure LSP servers
 local servers = {
-  clangd = {
-    cmd = { "clangd", "--background-index" },
-    filetypes = { "c", "cpp", "objc", "objcpp" },
-  },
-  pyright = {
-    settings = {
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = "workspace",
-          useLibraryCodeForTypes = true
-        }
-      }
-    }
-  },
-  jdtls = {},
-  rust_analyzer = {
-    settings = {
-      ['rust-analyzer'] = {
-        diagnostics = {
-          enable = false,
-        }
-      }
-    }
-  },
-  intelephense = {
-    settings = {
-      intelephense = {
-        files = {
-          maxSize = 1000000;
-        };
-      };
-    }
-  },
-  lua_ls = {
-    settings = {
-      Lua = {
-        runtime = {
-          version = 'LuaJIT',
-        },
-        diagnostics = {
-          globals = {'vim'},
-        },
-        workspace = {
-          library = vim.api.nvim_get_runtime_file("", true),
-        },
-        telemetry = {
-          enable = false,
-        },
-      },
+    clangd = {
+        cmd = { "clangd", "--background-index" },
+        filetypes = { "c", "cpp", "objc", "objcpp" },
     },
-  },
+    pyright = {
+        settings = {
+            python = {
+                analysis = {
+                    autoSearchPaths = true,
+                    diagnosticMode = "workspace",
+                    useLibraryCodeForTypes = true
+                }
+            }
+        }
+    },
+    jdtls = {},
+    rust_analyzer = {
+        settings = {
+            ['rust-analyzer'] = {
+                diagnostics = {
+                    enable = false,
+                }
+            }
+        }
+    },
+    intelephense = {
+        settings = {
+            intelephense = {
+                files = {
+                    maxSize = 1000000,
+                },
+            },
+        }
+    },
+    lua_ls = {
+        settings = {
+            Lua = {
+                runtime = {
+                    version = 'LuaJIT',
+                },
+                diagnostics = {
+                    globals = { 'vim' },
+                },
+                workspace = {
+                    library = vim.api.nvim_get_runtime_file("", true),
+                },
+                telemetry = {
+                    enable = false,
+                },
+            },
+        },
+    },
 }
 
 for server, config in pairs(servers) do
-  config.on_attach = on_attach
-  config.capabilities = capabilities
-  lspconfig[server].setup(config)
+    config.on_attach = on_attach
+    config.capabilities = capabilities
+    lspconfig[server].setup(config)
 end
 
 -- Completion setup
@@ -310,60 +310,60 @@ local cmp = require('cmp')
 local luasnip = require('luasnip')
 
 cmp.setup({
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  }, {
-    { name = 'buffer' },
-  })
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    }, {
+        { name = 'buffer' },
+    })
 })
 
 -- Use buffer source for `/` and `?`
 cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
 })
 
 -- Use cmdline & path source for ':'
 cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  })
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    })
 })
 
 -- Helper function to get the project root (directory containing .git)
@@ -408,7 +408,8 @@ end
 
 -- Function to check if in a Git repository
 function is_git_repo()
-    local result = vim.fn.system('git -C ' .. vim.fn.shellescape(get_git_root()) .. ' rev-parse --is-inside-work-tree 2>/dev/null')
+    local result = vim.fn.system('git -C ' ..
+        vim.fn.shellescape(get_git_root()) .. ' rev-parse --is-inside-work-tree 2>/dev/null')
     return vim.v.shell_error == 0
 end
 
@@ -420,7 +421,8 @@ end
 -- Function to check if upstream is set for the current branch
 function has_upstream()
     local branch = get_current_branch()
-    local upstream = vim.fn.system('git -C ' .. vim.fn.shellescape(get_git_root()) .. ' rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null')
+    local upstream = vim.fn.system('git -C ' ..
+        vim.fn.shellescape(get_git_root()) .. ' rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null')
     return vim.v.shell_error == 0
 end
 
@@ -503,7 +505,8 @@ vim.keymap.set('n', '<leader>gf', function()
     if #files == 0 then
         print("No modified or untracked files found")
         if current_file ~= '' then
-            execute_git_command('add ' .. vim.fn.shellescape(current_file), 'Git add ' .. current_file .. ' successful', 'Git add ' .. current_file .. ' failed')
+            execute_git_command('add ' .. vim.fn.shellescape(current_file), 'Git add ' .. current_file .. ' successful',
+                'Git add ' .. current_file .. ' failed')
         else
             print("No file open to add")
         end
@@ -517,13 +520,15 @@ vim.keymap.set('n', '<leader>gf', function()
     }, function(choice)
         if choice == nil then
             if current_file ~= '' then
-                execute_git_command('add ' .. vim.fn.shellescape(current_file), 'Git add ' .. current_file .. ' successful', 'Git add ' .. current_file .. ' failed')
+                execute_git_command('add ' .. vim.fn.shellescape(current_file),
+                    'Git add ' .. current_file .. ' successful', 'Git add ' .. current_file .. ' failed')
             else
                 print("Git add aborted: No file selected")
             end
             return
         end
-        execute_git_command('add ' .. vim.fn.shellescape(choice), 'Git add ' .. choice .. ' successful', 'Git add ' .. choice .. ' failed')
+        execute_git_command('add ' .. vim.fn.shellescape(choice), 'Git add ' .. choice .. ' successful',
+            'Git add ' .. choice .. ' failed')
     end)
 end, { noremap = true, desc = "Git add specific file" })
 
@@ -571,10 +576,12 @@ vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', { noremap = true, si
 vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', { noremap = true, silent = true, desc = "Help tags" })
 
 -- LSP diagnostic keybindings
-vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { noremap = true, silent = true, desc = "Open diagnostic float" })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float,
+    { noremap = true, silent = true, desc = "Open diagnostic float" })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { noremap = true, silent = true, desc = "Go to previous diagnostic" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { noremap = true, silent = true, desc = "Go to next diagnostic" })
-vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { noremap = true, silent = true, desc = "Set diagnostic loclist" })
+vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist,
+    { noremap = true, silent = true, desc = "Set diagnostic loclist" })
 
 -- Create NewFile command
 vim.api.nvim_create_user_command('NewFile', function(opts)
@@ -603,162 +610,162 @@ end, { nargs = '?' })
 
 -- Diagnostic configuration
 vim.diagnostic.config({
-  virtual_text = true,
-  signs = true,
-  update_in_insert = false,
-  underline = true,
-  severity_sort = false,
-  float = {
-    border = 'rounded',
-    source = 'always',
-    header = '',
-    prefix = '',
-  },
+    virtual_text = true,
+    signs = true,
+    update_in_insert = false,
+    underline = true,
+    severity_sort = false,
+    float = {
+        border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+    },
 })
 
 -- Set diagnostic signs
 local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
 local function create_welcome_screen()
-  -- Create a new buffer
-  local buf = vim.api.nvim_create_buf(false, true) -- false: not listed, true: scratch buffer
-  vim.api.nvim_set_current_buf(buf)
+    -- Create a new buffer
+    local buf = vim.api.nvim_create_buf(false, true) -- false: not listed, true: scratch buffer
+    vim.api.nvim_set_current_buf(buf)
 
-  -- Define ASCII art
-  local logo = {
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⡤⣤⢤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠛⠉⠀⠀⠀⠀⠀⠀⠉⠻⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠏⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠈⢻⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠯⠀⠀⠀⢰⣿⣿⣿⣆⡀⣴⣾⣿⣦⡈⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣏⠀⠀⠀⠀⢸⣿⣿⣿⡿⠇⣿⣿⣿⣿⠆⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⠀⠀⠈⠿⠿⡿⠃⠀⢿⣿⣿⠏⠀⠀⢹⣗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⡐⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠘⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⡁⡿⠄⠀⢀⡷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠂⠀⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⣻⡷⠀⠠⣼⡗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣦⠀⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⢠⡿⠃⠀⢡⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠸⣿⠆⠀⠸⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⢀⣿⠓⠀⠀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡧⠀⠀⠹⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⢰⣾⡃⠀⠀⠀⣿⡄⠀⠀⠀⠀⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⡀⠀⢮⠿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⣨⡿⠃⠀⠀⠀⢠⡿⠀⠀⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠁⠚⣷⡀⠀⣀⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⣠⡾⠋⠀⠀⠀⠰⠀⢸⣇⠀⠀⠀⠀⠀⠀⠈⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣷⡿⠛⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠐⠿⠶⠶⠶⢤⣤⣤⣤⣼⣇⠀⠀⠀⠀⠀⡀⠀⡘⣷⠀⠀⠀⠀⠀⠀⠀⠈⢀⠀⠈⣿⣄⠀⠃⠀⠀⠀⠀⠀⠀⠀⢀]],
-    [[⠀⠀⠀⢀⠀⠀⠁⢻⣏⠉⣿⡀⠀⠀⠀⠘⠅⠀⣈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⢻⣶⡿⠃⠀⠀⢀⣬⣾⣿⡻⠋⣿⡆⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⡿⠯⠶⠾⠛⠁⠈⠘⣷⣿⠏⠀⢀⣴⠾⠋⠉⠉⠉⠙⠉⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣮⠷⠟⠉⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
-    "",
-  }
-  
-  local name = {
-    "Ashen Chathuranga | open-source is ♥",
-    "", -- Empty line for spacing
-  }
+    -- Define ASCII art
+    local logo = {
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⡤⣤⢤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠛⠉⠀⠀⠀⠀⠀⠀⠉⠻⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠏⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠈⢻⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠯⠀⠀⠀⢰⣿⣿⣿⣆⡀⣴⣾⣿⣦⡈⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣏⠀⠀⠀⠀⢸⣿⣿⣿⡿⠇⣿⣿⣿⣿⠆⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⠀⠀⠈⠿⠿⡿⠃⠀⢿⣿⣿⠏⠀⠀⢹⣗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⡐⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠘⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⡁⡿⠄⠀⢀⡷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠂⠀⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⣻⡷⠀⠠⣼⡗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣦⠀⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⢠⡿⠃⠀⢡⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠸⣿⠆⠀⠸⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⢀⣿⠓⠀⠀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡧⠀⠀⠹⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⢰⣾⡃⠀⠀⠀⣿⡄⠀⠀⠀⠀⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⡀⠀⢮⠿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⣨⡿⠃⠀⠀⠀⢠⡿⠀⠀⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠁⠚⣷⡀⠀⣀⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⣠⡾⠋⠀⠀⠀⠰⠀⢸⣇⠀⠀⠀⠀⠀⠀⠈⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣷⡿⠛⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠐⠿⠶⠶⠶⢤⣤⣤⣤⣼⣇⠀⠀⠀⠀⠀⡀⠀⡘⣷⠀⠀⠀⠀⠀⠀⠀⠈⢀⠀⠈⣿⣄⠀⠃⠀⠀⠀⠀⠀⠀⠀⢀]],
+        [[⠀⠀⠀⢀⠀⠀⠁⢻⣏⠉⣿⡀⠀⠀⠀⠘⠅⠀⣈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⢻⣶⡿⠃⠀⠀⢀⣬⣾⣿⡻⠋⣿⡆⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⡿⠯⠶⠾⠛⠁⠈⠘⣷⣿⠏⠀⢀⣴⠾⠋⠉⠉⠉⠙⠉⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        [[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣮⠷⠟⠉⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
+        "",
+    }
 
-  local shortcuts = {
-    "Essential Keybindings:",
-    "",
-    "<leader>e : Explorer    <leader>ff: Find Files    <leader>fg: Search",
-    "<leader>ga: Git Add     <leader>gc: Git Commit    <leader>gp: Git Push",
-    "<leader>w : Save        <leader>q : Quit          Press 'q' to close",
-  }
+    local name = {
+        "Ashen Chathuranga | open-source is ♥",
+        "", -- Empty line for spacing
+    }
 
-  -- Define top margin (number of empty lines)
-  local top_margin = 2
-  local margin_lines = {}
-  for i = 1, top_margin do
-    table.insert(margin_lines, "")
-  end
+    local shortcuts = {
+        "Essential Keybindings:",
+        "",
+        "<leader>e : Explorer    <leader>ff: Find Files    <leader>fg: Search",
+        "<leader>ga: Git Add     <leader>gc: Git Commit    <leader>gp: Git Push",
+        "<leader>w : Save        <leader>q : Quit          Press 'q' to close",
+    }
 
-  -- Calculate the maximum line width for logo, name, and shortcuts separately
-  local max_logo_width = 0
-  for _, line in ipairs(logo) do
-    max_logo_width = math.max(max_logo_width, vim.fn.strwidth(line))
-  end
+    -- Define top margin (number of empty lines)
+    local top_margin = 2
+    local margin_lines = {}
+    for i = 1, top_margin do
+        table.insert(margin_lines, "")
+    end
 
-  local max_name_width = 0
-  for _, line in ipairs(name) do
-    max_name_width = math.max(max_name_width, vim.fn.strwidth(line))
-  end
+    -- Calculate the maximum line width for logo, name, and shortcuts separately
+    local max_logo_width = 0
+    for _, line in ipairs(logo) do
+        max_logo_width = math.max(max_logo_width, vim.fn.strwidth(line))
+    end
 
-  local max_shortcuts_width = 0
-  for _, line in ipairs(shortcuts) do
-    max_shortcuts_width = math.max(max_shortcuts_width, vim.fn.strwidth(line))
-  end
+    local max_name_width = 0
+    for _, line in ipairs(name) do
+        max_name_width = math.max(max_name_width, vim.fn.strwidth(line))
+    end
 
-  -- Get the window width
-  local win_width = vim.api.nvim_get_option("columns")
+    local max_shortcuts_width = 0
+    for _, line in ipairs(shortcuts) do
+        max_shortcuts_width = math.max(max_shortcuts_width, vim.fn.strwidth(line))
+    end
 
-  -- Calculate padding to center each section
-  local logo_padding = math.floor((win_width - max_logo_width) / 2)
-  local name_padding = math.floor((win_width - max_name_width) / 2)
-  local shortcuts_padding = math.floor((win_width - max_shortcuts_width) / 2)
-  if logo_padding < 0 then logo_padding = 0 end
-  if name_padding < 0 then name_padding = 0 end
-  if shortcuts_padding < 0 then shortcuts_padding = 0 end
+    -- Get the window width
+    local win_width = vim.api.nvim_get_option("columns")
 
-  -- Add padding to each section
-  local padded_lines = {}
-  for _, line in ipairs(margin_lines) do
-    table.insert(padded_lines, line) -- No padding for empty margin lines
-  end
-  for _, line in ipairs(logo) do
-    table.insert(padded_lines, string.rep(" ", logo_padding) .. line)
-  end
-  for _, line in ipairs(name) do
-    table.insert(padded_lines, string.rep(" ", name_padding) .. line)
-  end
-  for _, line in ipairs(shortcuts) do
-    table.insert(padded_lines, string.rep(" ", shortcuts_padding) .. line)
-  end
+    -- Calculate padding to center each section
+    local logo_padding = math.floor((win_width - max_logo_width) / 2)
+    local name_padding = math.floor((win_width - max_name_width) / 2)
+    local shortcuts_padding = math.floor((win_width - max_shortcuts_width) / 2)
+    if logo_padding < 0 then logo_padding = 0 end
+    if name_padding < 0 then name_padding = 0 end
+    if shortcuts_padding < 0 then shortcuts_padding = 0 end
 
-  -- Set the lines in the buffer
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, padded_lines)
+    -- Add padding to each section
+    local padded_lines = {}
+    for _, line in ipairs(margin_lines) do
+        table.insert(padded_lines, line) -- No padding for empty margin lines
+    end
+    for _, line in ipairs(logo) do
+        table.insert(padded_lines, string.rep(" ", logo_padding) .. line)
+    end
+    for _, line in ipairs(name) do
+        table.insert(padded_lines, string.rep(" ", name_padding) .. line)
+    end
+    for _, line in ipairs(shortcuts) do
+        table.insert(padded_lines, string.rep(" ", shortcuts_padding) .. line)
+    end
 
-  -- Buffer options
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe') -- Delete buffer when hidden
-  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile') -- Not a file
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false) -- Read-only
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'welcome') -- Custom filetype
+    -- Set the lines in the buffer
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, padded_lines)
 
-  -- Highlighting
-  for i = 1, top_margin do
-    vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', i - 1, 0, -1) -- Empty lines
-  end
-  for i = 1, #logo do
-    vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', top_margin + i - 1, 0, -1) -- Logo
-  end
-  for i = 1, #name do
-    vim.api.nvim_buf_add_highlight(buf, -1, 'Title', top_margin + #logo + i - 1, 0, -1) -- Name
-  end
-  for i = 1, #shortcuts do
-    vim.api.nvim_buf_add_highlight(buf, -1, 'Comment', top_margin + #logo + #name + i - 1, 0, -1) -- Shortcuts
-  end
+    -- Buffer options
+    vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')   -- Delete buffer when hidden
+    vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')   -- Not a file
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)   -- Read-only
+    vim.api.nvim_buf_set_option(buf, 'filetype', 'welcome') -- Custom filetype
 
-  -- Keymappings for the welcome buffer
-  local opts = { noremap = true, silent = true, buffer = buf }
-  vim.keymap.set('n', 'q', ':q<CR>', opts) -- Quit the welcome screen
-  vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', opts)
-  vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>', opts)
-  vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', opts)
-  vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', opts)
-  vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', opts)
+    -- Highlighting
+    for i = 1, top_margin do
+        vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', i - 1, 0, -1) -- Empty lines
+    end
+    for i = 1, #logo do
+        vim.api.nvim_buf_add_highlight(buf, -1, 'Normal', top_margin + i - 1, 0, -1) -- Logo
+    end
+    for i = 1, #name do
+        vim.api.nvim_buf_add_highlight(buf, -1, 'Title', top_margin + #logo + i - 1, 0, -1) -- Name
+    end
+    for i = 1, #shortcuts do
+        vim.api.nvim_buf_add_highlight(buf, -1, 'Comment', top_margin + #logo + #name + i - 1, 0, -1) -- Shortcuts
+    end
 
-  -- Window options
-  vim.wo.number = false
-  vim.wo.relativenumber = false
-  vim.wo.signcolumn = 'no'
-  vim.wo.cursorline = false
+    -- Keymappings for the welcome buffer
+    local opts = { noremap = true, silent = true, buffer = buf }
+    vim.keymap.set('n', 'q', ':q<CR>', opts) -- Quit the welcome screen
+    vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', opts)
+    vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>', opts)
+    vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', opts)
+    vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', opts)
+    vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', opts)
+
+    -- Window options
+    vim.wo.number = false
+    vim.wo.relativenumber = false
+    vim.wo.signcolumn = 'no'
+    vim.wo.cursorline = false
 end
 
 -- Autocommand to trigger the welcome screen
 vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 and vim.fn.line2byte(1) == -1 then -- No file opened
-      create_welcome_screen()
-    end
-  end,
+    callback = function()
+        if vim.fn.argc() == 0 and vim.fn.line2byte(1) == -1 then -- No file opened
+            create_welcome_screen()
+        end
+    end,
 })
