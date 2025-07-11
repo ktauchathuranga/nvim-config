@@ -769,3 +769,14 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end
     end,
 })
+
+-- Enable line numbers only for normal file buffers
+vim.api.nvim_create_autocmd({"BufWinEnter", "BufRead", "BufNewFile"}, {
+    callback = function()
+        -- Only enable for regular files (not welcome screen)
+        if vim.bo.filetype ~= "welcome" then
+            vim.wo.number = true
+            vim.wo.relativenumber = true
+        end
+    end,
+})
