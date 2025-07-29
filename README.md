@@ -2,7 +2,7 @@
 
 A modern, feature-rich Neovim configuration tailored for efficient coding, Git workflows, and file management, written in Lua. This configuration leverages the `lazy.nvim` plugin manager to provide a robust development environment with LSP support, autocompletion, syntax highlighting, and intuitive keybindings. Designed for simplicity, speed, and cross-platform compatibility, it’s ideal for developers on Arch Linux, Windows, or other platforms.
 
-![Screenshot From 2025-05-29 09-45-49](https://github.com/user-attachments/assets/0fda408e-3eae-4e41-a95c-fa672e2a3bf7)
+<img width="1048" height="1113" alt="New Project" src="https://github.com/user-attachments/assets/a58ea687-5d5f-4503-875f-6b2723e97f13" />
 
 ## Features
 
