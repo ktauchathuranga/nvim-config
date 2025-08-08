@@ -68,14 +68,13 @@ require("lazy").setup({
         config = function()
             require('mason-lspconfig').setup({
                 ensure_installed = {
-                    'clangd',        -- C/C++
                     'pyright',       -- Python
                     'jdtls',         -- Java
                     'rust_analyzer', -- Rust
                     'intelephense',  -- PHP
                     'lua_ls',        -- Lua
                 },
-                automatic_installation = true,
+                automatic_installation = false,
             })
         end
     },
