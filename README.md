@@ -25,39 +25,75 @@ A modern, feature-rich Neovim configuration tailored for efficient coding, Git w
 
 ## Installation
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/ktauchathuranga/nvim-config.git ~/.config/nvim
-   ```
-   
-2. **Ensure Neovim is Installed**:
-   On Arch Linux:
-   ```bash
-   sudo pacman -S neovim
-   ```
-   On Windows, use a package manager like `winget` or download from [Neovim’s releases](https://github.com/neovim/neovim/releases).
+### 1. Clone the Repository
 
-3. **Install Nerd Fonts (Required for Icons)**:
-   For proper icon display in plugins like `nvim-tree`, `lualine`, and `lazy.nvim`, install Nerd Fonts. On Arch Linux with GNOME:
-   ```bash
-   sudo pacman -S ttf-hack-nerd ttf-firacode-nerd ttf-jetbrains-mono-nerd
-   ```
-   For other platforms, download and install these fonts from [Nerd Fonts](https://www.nerdfonts.com/font-downloads) (e.g., Hack Nerd Font, FiraCode Nerd Font, JetBrains Mono Nerd Font) and configure your terminal to use one of them.
+- **On Linux/macOS (e.g., Arch Linux):**
+  ```bash
+  git clone https://github.com/ktauchathuranga/nvim-config.git ~/.config/nvim
+  ```
 
-4. **Verify Git Configuration**:
-   Ensure Git is installed and configured:
-   ```bash
-   git config --global user.name "Your Name"
-   git config --global user.email "your.email@example.com"
-   git config --global pull.rebase false
-   ```
-   The last command sets the default pull strategy to merge, aligning with the configuration’s behavior.
+- **On Windows:**
+  ```powershell
+  git clone https://github.com/ktauchathuranga/nvim-config.git $env:LOCALAPPDATA\nvim
+  ```
+  Or manually copy the contents of this repo into `%LOCALAPPDATA%\nvim`.
 
-5. **Start Neovim**:
-   ```bash
-   nvim
-   ```
-   The configuration in `init.lua` is loaded automatically from `~/.config/nvim/init.lua`. Plugins are installed on first startup via `lazy.nvim`.
+### 2. Install Neovim
+
+- **On Arch Linux:**
+  ```bash
+  sudo pacman -S neovim
+  ```
+
+- **On Windows (Recommended: via Scoop):**
+  1. Open PowerShell as Administrator and run:
+     ```powershell
+     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+     ```
+  2. Install Scoop (if not already installed):
+     ```powershell
+     iwr -useb get.scoop.sh | iex
+     ```
+  3. Install Neovim:
+     ```powershell
+     scoop install neovim
+     ```
+  4. Alternatively, you can download a pre-built release from [Neovim’s releases](https://github.com/neovim/neovim/releases) and extract it manually.
+
+### 3. Install Nerd Fonts (Required for Icons)
+
+For proper icon display in plugins like `nvim-tree`, `lualine`, and `lazy.nvim`, install Nerd Fonts:
+
+- **On Arch Linux with GNOME:**
+  ```bash
+  sudo pacman -S ttf-hack-nerd ttf-firacode-nerd ttf-jetbrains-mono-nerd
+  ```
+- **On Windows or other platforms:**  
+  Download and install these fonts from [Nerd Fonts](https://www.nerdfonts.com/font-downloads) (e.g., Hack Nerd Font, FiraCode Nerd Font, JetBrains Mono Nerd Font) and configure your terminal to use one of them.
+
+### 4. Verify Git Configuration
+
+Ensure Git is installed and configured:
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+git config --global pull.rebase false
+```
+The last command sets the default pull strategy to merge, aligning with the configuration’s behavior.
+
+### 5. Start Neovim
+
+- On Linux/macOS:
+  ```bash
+  nvim
+  ```
+- On Windows:
+  Open Command Prompt or PowerShell and run:
+  ```powershell
+  nvim
+  ```
+  The configuration in `init.lua` is loaded automatically from the config directory (`~/.config/nvim/init.lua` on Linux/macOS or `%LOCALAPPDATA%\nvim\init.lua` on Windows).  
+  Plugins are installed on first startup via `lazy.nvim`.
 
 ## Keybindings
 
