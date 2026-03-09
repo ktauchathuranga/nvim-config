@@ -118,7 +118,7 @@ require("lazy").setup({
     -- File explorer
     {
         'nvim-tree/nvim-tree.lua',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        dependencies = { 'echasnovski/mini.icons' },
         config = function()
             require('nvim-tree').setup({
                 disable_netrw = true,
@@ -158,7 +158,7 @@ require("lazy").setup({
     -- Status line
     {
         'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        dependencies = { 'echasnovski/mini.icons' },
         config = function()
             require('lualine').setup({
                 options = {
@@ -224,6 +224,16 @@ require("lazy").setup({
         event = 'InsertEnter',
         config = function()
             require('nvim-autopairs').setup()
+        end,
+    },
+
+    -- Icons (no Nerd Fonts required, provides nvim-web-devicons compatibility)
+    {
+        'echasnovski/mini.icons',
+        version = false,
+        config = function()
+            require('mini.icons').setup()
+            MiniIcons.mock_nvim_web_devicons()
         end,
     },
 
@@ -639,8 +649,8 @@ vim.diagnostic.config({
     },
 })
 
--- Set diagnostic signs
-local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+-- Set diagnostic signs (plain Unicode, no Nerd Fonts required)
+local signs = { Error = "E ", Warn = "W ", Hint = "H ", Info = "I " }
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
