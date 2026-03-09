@@ -17,6 +17,10 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 50
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 -- vim.opt.colorcolumn = '80'
 
 -- Auto-change directory to the one provided as an argument
@@ -31,7 +35,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         "git",
         "clone",
@@ -73,6 +77,7 @@ require("lazy").setup({
                     'rust_analyzer', -- Rust
                     'intelephense',  -- PHP
                     'lua_ls',        -- Lua
+                    'clangd',        -- C/C++
                 },
                 automatic_installation = false,
             })
@@ -138,7 +143,7 @@ require("lazy").setup({
     -- Fuzzy finder
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.4',
+        tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('telescope').setup({
@@ -215,6 +220,32 @@ require("lazy").setup({
             vim.cmd.colorscheme 'catppuccin'
         end
     },
+
+    -- Auto-pair brackets
+    {
+        'windwp/nvim-autopairs',
+        event = 'InsertEnter',
+        config = function()
+            require('nvim-autopairs').setup()
+        end,
+    },
+
+    -- Comment toggling (gcc to comment a line, gc in visual mode)
+    {
+        'numiras/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end,
+    },
+
+    -- Indent guides
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        main = 'ibl',
+        config = function()
+            require('ibl').setup()
+        end,
+    },
 })
 
 -- LSP Configuration
@@ -260,15 +291,7 @@ local servers = {
         }
     },
     jdtls = {},
-    rust_analyzer = {
-        settings = {
-            ['rust-analyzer'] = {
-                diagnostics = {
-                    enable = false,
-                }
-            }
-        }
-    },
+    rust_analyzer = {},
     intelephense = {
         settings = {
             intelephense = {
@@ -342,6 +365,7 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'path' },
     }, {
         { name = 'buffer' },
     })
@@ -366,7 +390,7 @@ cmp.setup.cmdline(':', {
 })
 
 -- Helper function to get the project root (directory containing .git)
-function get_git_root()
+local function get_git_root()
     local path = vim.fn.expand('%:p:h')
     local result = vim.fn.system('git -C ' .. vim.fn.shellescape(path) .. ' rev-parse --show-toplevel 2>/dev/null')
     if vim.v.shell_error == 0 then
@@ -406,19 +430,19 @@ local function get_git_files()
 end
 
 -- Function to check if in a Git repository
-function is_git_repo()
+local function is_git_repo()
     local result = vim.fn.system('git -C ' ..
         vim.fn.shellescape(get_git_root()) .. ' rev-parse --is-inside-work-tree 2>/dev/null')
     return vim.v.shell_error == 0
 end
 
 -- Function to get the current branch name
-function get_current_branch()
+local function get_current_branch()
     return vim.fn.trim(vim.fn.system('git -C ' .. vim.fn.shellescape(get_git_root()) .. ' rev-parse --abbrev-ref HEAD'))
 end
 
 -- Function to check if upstream is set for the current branch
-function has_upstream()
+local function has_upstream()
     local branch = get_current_branch()
     local upstream = vim.fn.system('git -C ' ..
         vim.fn.shellescape(get_git_root()) .. ' rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null')
@@ -426,7 +450,7 @@ function has_upstream()
 end
 
 -- Smart git push with upstream handling and feedback
-function smart_git_push()
+local function smart_git_push()
     print("Starting git push...")
     if not is_git_repo() then
         print("Not a git repository")
@@ -443,7 +467,7 @@ function smart_git_push()
 end
 
 -- Smart git pull with upstream and merge strategy
-function smart_git_pull()
+local function smart_git_pull()
     print("Starting git pull...")
     if not is_git_repo() then
         print("Not a git repository")
@@ -460,7 +484,7 @@ function smart_git_pull()
 end
 
 -- Function to add Git remote
-function add_git_remote()
+local function add_git_remote()
     local remote_name = vim.fn.input('Remote name (e.g., origin): ')
     if remote_name == '' then
         print("Remote name cannot be empty")
@@ -696,7 +720,7 @@ local function create_welcome_screen()
     end
 
     -- Get the window width
-    local win_width = vim.api.nvim_get_option("columns")
+    local win_width = vim.o.columns
 
     -- Calculate padding to center each section
     local logo_padding = math.floor((win_width - max_logo_width) / 2)
@@ -725,10 +749,10 @@ local function create_welcome_screen()
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, padded_lines)
 
     -- Buffer options
-    vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')   -- Delete buffer when hidden
-    vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')   -- Not a file
-    vim.api.nvim_buf_set_option(buf, 'modifiable', false)   -- Read-only
-    vim.api.nvim_buf_set_option(buf, 'filetype', 'welcome') -- Custom filetype
+    vim.bo[buf].bufhidden = 'wipe'    -- Delete buffer when hidden
+    vim.bo[buf].buftype = 'nofile'    -- Not a file
+    vim.bo[buf].modifiable = false    -- Read-only
+    vim.bo[buf].filetype = 'welcome'  -- Custom filetype
 
     -- Highlighting
     for i = 1, top_margin do
