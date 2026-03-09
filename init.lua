@@ -109,11 +109,8 @@ require("lazy").setup({
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
         config = function()
-            require('nvim-treesitter.configs').setup({
+            require('nvim-treesitter').setup({
                 ensure_installed = { 'c', 'python', 'java', 'rust', 'php', 'lua', 'vim', 'vimdoc', 'query' },
-                sync_install = false,
-                highlight = { enable = true },
-                indent = { enable = true },
             })
         end
     },
