@@ -232,7 +232,7 @@ require("lazy").setup({
 
     -- Comment toggling (gcc to comment a line, gc in visual mode)
     {
-        'numiras/Comment.nvim',
+        'numToStr/Comment.nvim',
         config = function()
             require('Comment').setup()
         end,
