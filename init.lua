@@ -248,84 +248,80 @@ require("lazy").setup({
     },
 })
 
--- LSP Configuration
-local lspconfig = require('lspconfig')
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
+-- LSP keybindings via LspAttach autocmd (Neovim 0.11+)
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local opts = { buffer = args.buf, noremap = true, silent = true }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+        vim.keymap.set('n', '<leader>f', function()
+            vim.lsp.buf.format { async = true }
+        end, opts)
+    end,
+})
 
--- Add additional capabilities supported by nvim-cmp
-local capabilities = cmp_nvim_lsp.default_capabilities()
+-- LSP Configuration (Neovim 0.11+ vim.lsp.config API)
+vim.lsp.config('*', {
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+})
 
--- LSP on_attach function
-local on_attach = function(client, bufnr)
-    local opts = { buffer = bufnr, noremap = true, silent = true }
+vim.lsp.config('clangd', {
+    cmd = { "clangd", "--background-index" },
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+})
 
-    -- LSP keybindings
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<leader>f', function()
-        vim.lsp.buf.format { async = true }
-    end, opts)
-end
-
--- Configure LSP servers
-local servers = {
-    clangd = {
-        cmd = { "clangd", "--background-index" },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-    },
-    pyright = {
-        settings = {
-            python = {
-                analysis = {
-                    autoSearchPaths = true,
-                    diagnosticMode = "workspace",
-                    useLibraryCodeForTypes = true
-                }
-            }
-        }
-    },
-    jdtls = {},
-    rust_analyzer = {},
-    intelephense = {
-        settings = {
-            intelephense = {
-                files = {
-                    maxSize = 1000000,
-                },
-            },
-        }
-    },
-    lua_ls = {
-        settings = {
-            Lua = {
-                runtime = {
-                    version = 'LuaJIT',
-                },
-                diagnostics = {
-                    globals = { 'vim' },
-                },
-                workspace = {
-                    library = vim.api.nvim_get_runtime_file("", true),
-                },
-                telemetry = {
-                    enable = false,
-                },
+vim.lsp.config('pyright', {
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "workspace",
+                useLibraryCodeForTypes = true,
             },
         },
     },
-}
+})
 
-for server, config in pairs(servers) do
-    config.on_attach = on_attach
-    config.capabilities = capabilities
-    lspconfig[server].setup(config)
-end
+vim.lsp.config('jdtls', {})
+
+vim.lsp.config('rust_analyzer', {})
+
+vim.lsp.config('intelephense', {
+    settings = {
+        intelephense = {
+            files = {
+                maxSize = 1000000,
+            },
+        },
+    },
+})
+
+vim.lsp.config('lua_ls', {
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
+})
+
+vim.lsp.enable({ 'clangd', 'pyright', 'jdtls', 'rust_analyzer', 'intelephense', 'lua_ls' })
 
 -- Completion setup
 local cmp = require('cmp')
